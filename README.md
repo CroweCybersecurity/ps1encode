@@ -24,3 +24,4 @@ Available output types:
 
 => cfm (for use with Adobe ColdFusion)
 
+DETAILS - http://rvnsec.wordpress.com/2014/09/01/ps1encode-powershell-for-days/
