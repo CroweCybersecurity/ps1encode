@@ -24,6 +24,7 @@
 # => cfm (for use with Adobe ColdFusion)
 #
 #    Powershell code based on PowerSploit written by Matthew Graeber and SET by Dave Kennedy
+#     DETAILS - http://rvnsec.wordpress.com/2014/09/01/ps1encode-powershell-for-days/
 #
 
 require 'optparse'
