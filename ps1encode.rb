@@ -5,9 +5,6 @@
 #    by Piotr Marszalik  -  peter.mars[at]outlook.com
 #    05/08/2013
 #    
-#    update 6/16/2014 - logic to determine the architecture is performed
-#                      within the powershell code rather than doing the "cd" hack
-#
 #
 #    Use to generate and encode a powershell based metasploit payloads. 
 #
