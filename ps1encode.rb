@@ -246,8 +246,8 @@ end
 ########################EXE_ENCODE###############################
 if $lencode == "exe"
 
-#determine if MinGW has been installed
-mingw = Dir::exists?('/usr/i586-mingw32msvc')
+#determine if MinGW has been installed, support new and old MinGW system paths
+mingw = True if Dir::exists?('/usr/i586-mingw32msvc') || Dir::exists?('/usr/bin/i586-migw32msvc')
 if mingw == false
     puts "Must have MinGW installed in order to compile EXEs!!"
     puts "\n\tRun to download: apt-get install mingw32 \n"
