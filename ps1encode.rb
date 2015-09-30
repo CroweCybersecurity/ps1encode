@@ -247,7 +247,7 @@ end
 if $lencode == "exe"
 
 #determine if MinGW has been installed, support new and old MinGW system paths
-mingw = File::exists?('/usr/i586-mingw32msvc') || File::exists?('/usr/bin/i586-migw32msvc')
+mingw = true if File::exists?('/usr/i586-mingw32msvc') || File::exists?('/usr/bin/i586-migw32msvc')
 if mingw == false
     puts "Must have MinGW installed in order to compile EXEs!!"
     puts "\n\tRun to download: apt-get install mingw32 \n"
