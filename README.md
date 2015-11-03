@@ -12,6 +12,8 @@ Available output types:
 
 => vba (for use with macro trojan docs) < developed in conjunction with Ryan Reynolds
 
+=> vbs (for use with vbs scripts)
+
 => war (tomcat) < developed in conjuntion with Tony James
 
 => exe (executable) requires MinGW - i586-mingw32msvc-gcc [apt-get install mingw32]
