@@ -13,6 +13,7 @@
 # => raw (encoded payload only - no powershell run options)
 # => cmd (for use with bat files)
 # => vba (for use with macro trojan docs) < developed in conjunction with Ryan Reynolds
+# => vbs (for use with vbs scripts)
 # => war (tomcat) < developed in conjuntion with Tony James
 # => exe (executable) requires MinGW - i586-mingw32msvc-gcc [apt-get install mingw32]
 # => java (for use with malicious java applets)
@@ -154,7 +155,7 @@ if $lencode == "cmd"
 end
 
 
-########################VBS_ENCODE###############################
+########################VBA_ENCODE###############################
 if $lencode == "vba"
 
     powershell_encoded = gen_PS_shellcode()
@@ -182,7 +183,7 @@ End Sub
 end
     
 
-######################HTA_ENCODE###############################
+######################VBS_ENCODE###############################
 if $lencode == "vbs"
 
 powershell_encoded = gen_PS_shellcode()
