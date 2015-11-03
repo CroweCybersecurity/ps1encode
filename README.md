@@ -24,4 +24,6 @@ Available output types:
 
 => cfm (for use with Adobe ColdFusion)
 
+=> aspx (for use with Microsoft ASP.NET)
+
 DETAILS - http://rvnsec.wordpress.com/2014/09/01/ps1encode-powershell-for-days/

