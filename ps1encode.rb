@@ -25,7 +25,9 @@
 #
 #
 #    Powershell code based on PowerSploit written by Matthew Graeber and SET by Dave Kennedy
-#     DETAILS - http://rvnsec.wordpress.com/2014/09/01/ps1encode-powershell-for-days/
+#     DETAILS:
+#	- http://rvnsec.wordpress.com/2014/09/01/ps1encode-powershell-for-days/
+#	- https://rvnsec.wordpress.com/2015/12/18/shell-party-continues/
 #
 
 require 'optparse'
