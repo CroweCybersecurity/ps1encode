@@ -18,12 +18,13 @@ Available output types:
 - hta (HTML applications)
 - cfm (for use with Adobe ColdFusion)
 - aspx (for use with Microsoft ASP.NET)
-- lnk (windows shortcut - requires a website to stage the payload)
-- cst (COM scriptlet - requires a webserver or other path stage the payload)
+- lnk (windows shortcut - requires a webserver to stage the payload)
+- sct (COM scriptlet - requires a webserver to stage the payload)
 
 
 Powershell code based on PowerSploit written by Matthew Graeber and SET by Dave Kennedy
 
 DETAILS:
-* http://rvnsec.wordpress.com/2014/09/01/ps1encode-powershell-for-days/
+* https://rvnsec.wordpress.com/2014/09/01/ps1encode-powershell-for-days/
 * https://rvnsec.wordpress.com/2015/12/18/shell-party-continues/
+
