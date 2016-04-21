@@ -19,7 +19,7 @@ Available output types:
 - cfm (for use with Adobe ColdFusion)
 - aspx (for use with Microsoft ASP.NET)
 - lnk (windows shortcut - requires a website to stage the payload)
-
+- cst (COM scriptlet - requires a webserver or other path stage the payload)
 
 
 Powershell code based on PowerSploit written by Matthew Graeber and SET by Dave Kennedy
