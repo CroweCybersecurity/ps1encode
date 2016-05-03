@@ -14,7 +14,7 @@
 # => vba (for use with macro trojan docs)
 # => vbs (for use with vbs scripts)
 # => war (tomcat)
-# => exe (executable) requires MinGW - i586-mingw32msvc-gcc [apt-get install mingw32]
+# => exe (executable) requires MinGW - x86_64-w64-mingw32-gcc [apt-get install mingw-w64]
 # => java (for use with malicious java applets)
 # => js (javascript)
 # => php (for use with php pages)
@@ -262,10 +262,11 @@ end
 if $lencode == "exe"
 
 #determine if MinGW has been installed, support new and old MinGW system paths
-mingw = true if File::exists?('/usr/i586-mingw32msvc') || File::exists?('/usr/bin/i586-migw32msvc')
+mingw = false
+mingw = true if File::exists?('/usr/bin/x86_64-w64-mingw32-gcc')
 if mingw == false
     puts "Must have MinGW installed in order to compile EXEs!!"
-    puts "\n\tRun to download: apt-get install mingw32 \n"
+    puts "\n\tRun to download: apt-get install mingw-w64 \n"
     exit 1
 end
 
@@ -290,7 +291,7 @@ c_file_temp.close
 #compiling will require MinGW installed - "apt-get install mingw32"
 puts "compiling..."
 
-system("i586-mingw32msvc-gcc c_file_temp.c -o final_.exe")
+system("x86_64-w64-mingw32-gcc c_file_temp.c -o final_.exe")
 system("rm c_file_temp.c")
 
 puts "final_.exe created!"
