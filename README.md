@@ -11,7 +11,7 @@ Available output types:
 - vba (for use with macro trojan docs)
 - vbs (for use with vbs scripts)
 - war (tomcat)
-- exe (executable) requires MinGW - i586-mingw32msvc-gcc [apt-get install mingw32]
+- exe (executable) requires MinGW - x86_64-w64-mingw32-gcc [apt-get install mingw-w64]
 - java (for use with malicious java applets)
 - js (javascript)
 - php (for use with php pages)
