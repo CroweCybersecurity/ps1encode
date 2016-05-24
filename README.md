@@ -14,6 +14,7 @@ Available output types:
 - exe (executable) requires MinGW - x86_64-w64-mingw32-gcc [apt-get install mingw-w64]
 - java (for use with malicious java applets)
 - js (javascript)
+- js-rd32 (javascript called by rundll32.exe)
 - php (for use with php pages)
 - hta (HTML applications)
 - cfm (for use with Adobe ColdFusion)
